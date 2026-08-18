@@ -2,6 +2,6 @@ plugins { id 'com.android.application' }
 android {
  namespace 'br.com.alexpagamentos.mobile'
  compileSdk 36
- defaultConfig { applicationId 'br.com.alexpagamentos.mobile'; minSdk 26; targetSdk 36; versionCode 3; versionName '1.2.0' }
+ defaultConfig { applicationId 'br.com.alexpagamentos.mobile'; minSdk 26; targetSdk 36; versionCode 7; versionName '1.6.0' }
  buildTypes { release { minifyEnabled false; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } }
 }
