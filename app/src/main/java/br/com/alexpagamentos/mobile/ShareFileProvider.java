@@ -43,6 +43,7 @@ public class ShareFileProvider extends ContentProvider {
         String n = uri.getLastPathSegment();
         if (n != null && n.toLowerCase().endsWith(".pdf")) return "application/pdf";
         if (n != null && n.toLowerCase().endsWith(".json")) return "application/json";
+        if (n != null && n.toLowerCase().endsWith(".xlsx")) return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         return "application/octet-stream";
     }
 
