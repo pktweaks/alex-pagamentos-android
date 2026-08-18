@@ -276,10 +276,10 @@ public class NativeBridge {
         }
         for (JSONObject p : payments) totalReceived += safeNumber(p.optDouble("value", 0));
 
-        StringBuilder b = sheetBegin("A1:B16", new double[]{34, 24}, 0);
+        StringBuilder b = sheetBegin("A1:B16", new double[]{40, 28}, 0);
         addText(b, "A1", "ALEX PAGAMENTOS", 1);
         addText(b, "A2", "Planilha completa • exportada em " + new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()), 2);
-        rowStart(b, 4, 25); addText(b, "A4", "INDICADOR", 3); addText(b, "B4", "VALOR", 3); rowEnd(b);
+        rowStart(b, 4, 36); addText(b, "A4", "INDICADOR", 3); addText(b, "B4", "VALOR", 3); rowEnd(b);
         summaryRow(b, 5, "Total de clientes", clients.size(), false);
         summaryRow(b, 6, "Clientes ativos", open.size(), false);
         summaryRow(b, 7, "Pagos / encerrados", closed, false);
@@ -296,7 +296,7 @@ public class NativeBridge {
     }
 
     private static void summaryRow(StringBuilder b, int r, String label, double value, boolean money) {
-        rowStart(b, r, 22);
+        rowStart(b, r, 32);
         addText(b, "A" + r, label, 11);
         addNumber(b, "B" + r, value, money ? 13 : 12);
         rowEnd(b);
@@ -305,7 +305,7 @@ public class NativeBridge {
     private static String buildClientsSheet(List<JSONObject> clients) {
         final String[] h = {"CLIENTE", "TELEFONE", "VALOR", "PRÓXIMA COBRANÇA", "RECORRÊNCIA", "SITUAÇÃO", "ÚLTIMO PAGAMENTO", "OBSERVAÇÃO", "CADASTRADO EM", "ATUALIZADO EM", "CÓDIGO INTERNO"};
         int last = Math.max(4, 4 + clients.size());
-        StringBuilder b = sheetBegin("A1:K" + last, new double[]{28,20,15,20,19,24,21,38,20,20,25}, 4);
+        StringBuilder b = sheetBegin("A1:K" + last, new double[]{34,24,18,23,22,27,24,44,23,23,28}, 4);
         titleRows(b, "CLIENTES", "Todos os clientes cadastrados no aplicativo", 11);
         headerRow(b, h);
         int r = 5;
@@ -314,7 +314,7 @@ public class NativeBridge {
             boolean closed = c.optBoolean("closedPaid", false);
             String due = c.optString("dueDate", "");
             String status = clientStatus(c, today);
-            rowStart(b, r, 22);
+            rowStart(b, r, 32);
             addText(b, "A"+r, c.optString("name", ""), 4);
             addText(b, "B"+r, formatPhone(c.optString("phone", "")), 4);
             addNumber(b, "C"+r, safeNumber(c.optDouble("value", 0)), 5);
@@ -335,12 +335,12 @@ public class NativeBridge {
     private static String buildPaymentsSheet(List<JSONObject> payments) {
         final String[] h = {"DATA DO PAGAMENTO", "CLIENTE", "VALOR RECEBIDO", "VENCIMENTO REFERENTE", "CÓDIGO DO CLIENTE", "CÓDIGO DO PAGAMENTO"};
         int last = Math.max(4, 4 + payments.size());
-        StringBuilder b = sheetBegin("A1:F" + last, new double[]{23,30,18,22,27,28}, 4);
+        StringBuilder b = sheetBegin("A1:F" + last, new double[]{26,34,21,25,30,31}, 4);
         titleRows(b, "HISTÓRICO DE PAGAMENTOS", "Tudo que foi registrado como pago no aplicativo", 6);
         headerRow(b, h);
         int r=5;
         for (JSONObject p : payments) {
-            rowStart(b, r, 22);
+            rowStart(b, r, 32);
             addText(b, "A"+r, formatDateTime(p.optString("paidAt", "")), 4);
             addText(b, "B"+r, p.optString("clientName", ""), 4);
             addNumber(b, "C"+r, safeNumber(p.optDouble("value", 0)), 5);
@@ -357,12 +357,12 @@ public class NativeBridge {
     private static String buildNotesSheet(List<JSONObject> notes) {
         final String[] h = {"TÍTULO", "CLIENTE", "ANOTAÇÃO", "ATUALIZADA EM", "CRIADA EM", "CÓDIGO"};
         int last = Math.max(4, 4 + notes.size());
-        StringBuilder b = sheetBegin("A1:F" + last, new double[]{28,28,54,22,22,28}, 4);
+        StringBuilder b = sheetBegin("A1:F" + last, new double[]{32,32,60,25,25,31}, 4);
         titleRows(b, "ANOTAÇÕES", "Lembretes e observações registrados no aplicativo", 6);
         headerRow(b, h);
         int r=5;
         for (JSONObject n : notes) {
-            rowStart(b, r, 34);
+            rowStart(b, r, 46);
             addText(b, "A"+r, n.optString("title", ""), 4);
             addText(b, "B"+r, n.optString("clientName", ""), 4);
             addText(b, "C"+r, n.optString("text", ""), 14);
@@ -378,7 +378,7 @@ public class NativeBridge {
     private static String buildOpenSheet(List<JSONObject> open) {
         final String[] h = {"CLIENTE", "TELEFONE", "VALOR", "VENCIMENTO", "SITUAÇÃO", "RECORRÊNCIA", "ÚLTIMO PAGAMENTO", "OBSERVAÇÃO"};
         int last = Math.max(4, 4 + open.size());
-        StringBuilder b = sheetBegin("A1:H" + last, new double[]{29,20,16,18,22,19,21,42}, 4);
+        StringBuilder b = sheetBegin("A1:H" + last, new double[]{35,24,19,21,25,22,24,48}, 4);
         titleRows(b, "COBRANÇAS EM ABERTO", "Lista organizada por vencimento para conferir quem precisa pagar", 8);
         headerRow(b, h);
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
@@ -386,7 +386,7 @@ public class NativeBridge {
         for (JSONObject c : open) {
             String due = c.optString("dueDate", "");
             String status = clientStatus(c, today);
-            rowStart(b, r, 24);
+            rowStart(b, r, 34);
             addText(b, "A"+r, c.optString("name", ""), 4);
             addText(b, "B"+r, formatPhone(c.optString("phone", "")), 4);
             addNumber(b, "C"+r, safeNumber(c.optDouble("value", 0)), 5);
@@ -431,9 +431,9 @@ public class NativeBridge {
         b.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
         b.append("<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\">");
         b.append("<dimension ref=\"").append(dimension).append("\"/>");
-        b.append("<sheetViews><sheetView workbookViewId=\"0\">");
-        if (frozenRows > 0) b.append("<pane ySplit=\"").append(frozenRows).append("\" topLeftCell=\"A").append(frozenRows+1).append("\" activePane=\"bottomLeft\" state=\"frozen\"/>");
-        b.append("</sheetView></sheetViews><sheetFormatPr defaultRowHeight=\"18\"/>");
+        b.append("<sheetViews><sheetView workbookViewId=\"0\" zoomScale=\"135\" zoomScaleNormal=\"135\" showGridLines=\"0\">");
+        if (frozenRows > 0) b.append("<pane xSplit=\"1\" ySplit=\"").append(frozenRows).append("\" topLeftCell=\"B").append(frozenRows+1).append("\" activePane=\"bottomRight\" state=\"frozen\"/>");
+        b.append("</sheetView></sheetViews><sheetFormatPr defaultRowHeight=\"26\"/>");
         b.append("<cols>");
         for (int i=0;i<widths.length;i++) b.append("<col min=\"").append(i+1).append("\" max=\"").append(i+1).append("\" width=\"").append(widths[i]).append("\" customWidth=\"1\"/>");
         b.append("</cols><sheetData>");
@@ -441,13 +441,13 @@ public class NativeBridge {
     }
 
     private static void titleRows(StringBuilder b, String title, String subtitle, int cols) {
-        rowStart(b,1,32); addText(b,"A1","ALEX PAGAMENTOS • " + title,1); rowEnd(b);
-        rowStart(b,2,22); addText(b,"A2",subtitle + " • exportado em " + new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()),2); rowEnd(b);
+        rowStart(b,1,42); addText(b,"A1","ALEX PAGAMENTOS • " + title,1); rowEnd(b);
+        rowStart(b,2,30); addText(b,"A2",subtitle + " • exportado em " + new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()),2); rowEnd(b);
         // Linha 3 fica vazia para separar visualmente o título da tabela.
     }
 
     private static void headerRow(StringBuilder b, String[] headers) {
-        rowStart(b,4,26);
+        rowStart(b,4,36);
         for (int i=0;i<headers.length;i++) addText(b, col(i+1)+"4", headers[i], 3);
         rowEnd(b);
     }
@@ -566,7 +566,7 @@ public class NativeBridge {
 
     private static String appXml(String[] names) {
         StringBuilder titles=new StringBuilder(); for(String n:names) titles.append("<vt:lpstr>").append(xml(n)).append("</vt:lpstr>");
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Properties xmlns=\"http://schemas.openxmlformats.org/officeDocument/2006/extended-properties\" xmlns:vt=\"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes\"><Application>ALEX PAGAMENTOS</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size=\"2\" baseType=\"variant\"><vt:variant><vt:lpstr>Planilhas</vt:lpstr></vt:variant><vt:variant><vt:i4>"+names.length+"</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size=\""+names.length+"\" baseType=\"lpstr\">"+titles+"</vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>1.5</AppVersion></Properties>";
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Properties xmlns=\"http://schemas.openxmlformats.org/officeDocument/2006/extended-properties\" xmlns:vt=\"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes\"><Application>ALEX PAGAMENTOS</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size=\"2\" baseType=\"variant\"><vt:variant><vt:lpstr>Planilhas</vt:lpstr></vt:variant><vt:variant><vt:i4>"+names.length+"</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size=\""+names.length+"\" baseType=\"lpstr\">"+titles+"</vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>1.7</AppVersion></Properties>";
     }
 
     private static String coreXml() {
@@ -579,7 +579,7 @@ public class NativeBridge {
                 "<styleSheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\">"+
                 "<numFmts count=\"2\"><numFmt numFmtId=\"164\" formatCode=\"[$R$-pt-BR] #,##0.00\"/><numFmt numFmtId=\"165\" formatCode=\"dd/mm/yyyy\"/></numFmts>"+
                 "<fonts count=\"10\">"+
-                font("11",false,"FF111827")+font("18",true,"FFFFFFFF")+font("10",false,"FFB9C1CD")+font("10",true,"FFFFFFFF")+font("10",true,"FF1F2937")+font("10",true,"FFB91C1C")+font("10",true,"FF166534")+font("10",true,"FF92400E")+font("10",false,"FF374151")+font("16",true,"FF0F172A")+
+                font("13",false,"FF111827")+font("22",true,"FFFFFFFF")+font("12",false,"FFB9C1CD")+font("12",true,"FFFFFFFF")+font("13",true,"FF1F2937")+font("12",true,"FFB91C1C")+font("12",true,"FF166534")+font("12",true,"FF92400E")+font("12",false,"FF374151")+font("18",true,"FF0F172A")+
                 "</fonts>"+
                 "<fills count=\"9\"><fill><patternFill patternType=\"none\"/></fill><fill><patternFill patternType=\"gray125\"/></fill>"+
                 fill("FF171C24")+fill("FF293240")+fill("FFF8FAFC")+fill("FFFEE2E2")+fill("FFDCFCE7")+fill("FFFEF3C7")+fill("FFE0F2FE")+"</fills>"+
