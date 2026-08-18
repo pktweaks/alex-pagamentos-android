@@ -28,8 +28,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class NotificationReceiver extends BroadcastReceiver {
-    public static final String CHANNEL_OVERDUE = "alex_atrasados_v2";
-    public static final String CHANNEL_TODAY = "alex_vencimentos_v1";
+    public static final String CHANNEL_OVERDUE = "alex_atrasados_v3";
+    public static final String CHANNEL_TODAY = "alex_vencimentos_v2";
     private static final int REQ_ALARM = 3301;
 
     @Override public void onReceive(Context context, Intent intent) {
@@ -42,6 +42,12 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
         NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null) return;
+
+        // Novos IDs forçam o Android a recriar os canais com som após atualização do app.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            nm.deleteNotificationChannel("alex_atrasados_v2");
+            nm.deleteNotificationChannel("alex_vencimentos_v1");
+        }
 
         Uri overdueSound = Uri.parse("android.resource://" + c.getPackageName() + "/" + R.raw.cliente_atrasado);
         AudioAttributes attrs = new AudioAttributes.Builder()
