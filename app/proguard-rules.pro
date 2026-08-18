@@ -1,0 +1,1 @@
+-keepclassmembers class br.com.alexpagamentos.mobile.NativeBridge { public *; }
